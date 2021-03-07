@@ -2,5 +2,5 @@
 
 ## Skill 
 - Nuxt 
-## 개발 환경
+## Enviroment
 - vscode
