@@ -1,7 +1,7 @@
 export const state = () => ({
   me: null, // me가 null이면 비로그인 있으면 로그인한 상태
   followerList :[],
-  followingList: [],
+  followingList: []
 });
 
 export const mutations = {
