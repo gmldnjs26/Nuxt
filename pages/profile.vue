@@ -5,9 +5,8 @@
         <v-container>
           <v-container>
             <v-subheader>My Profile</v-subheader>
-            <v-form ref="form" v-model="valid" @submit.prevent="onChangeNickname"></v-form>
           </v-container>
-          <v-form>
+          <v-form ref="form" v-model="valid" @submit.prevent="onChangeNickname">
             <v-text-field
               v-model="nickname"
               label="닉네임"
@@ -40,14 +39,14 @@ export default {
   components: {
     FollowList,
   },
-  // layout: 'admin', // Nuxt가 추가한 기능
   data() {
     return {
       valid: false,
+      nickname: '',
       nicknameRules: v => !!v || "닉네임을 입력해주세요."
     }
   },
-  method: {
+  methods: {
     onChangeNickname() {
       this.$store.dispatch('users/changeNickname', {
         nickname: this.nickname,

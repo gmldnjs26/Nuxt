@@ -21,7 +21,7 @@ export const actions = {
     commit('addMainPost', payload, { root: false}); // 3번째 root인자는 index.js를 참조할지안할지
   },
   remove({ commit }, payload) {
-    commit( 'removeMainPost', payload);
+    commit('removeMainPost', payload);
   },
   addComment({ commit }, payload) {
     commit('addComment', payload);

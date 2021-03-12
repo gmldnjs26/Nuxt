@@ -1,7 +1,7 @@
 export const state = () => ({
   me: null, // me가 null이면 비로그인 있으면 로그인한 상태
   followerList :[],
-  followingList: []
+  followingList: [],
 });
 
 export const mutations = {
@@ -25,6 +25,6 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
     context.commit('setMe', payload);
   },
   changeNickname({ commit }, payload) {
-    commit('chageNickname', payload);
+    commit('changeNickname', payload);
   },
 };
