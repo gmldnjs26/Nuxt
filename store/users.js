@@ -1,7 +1,33 @@
 export const state = () => ({
   me: null, // me가 null이면 비로그인 있으면 로그인한 상태
-  followerList :[],
-  followingList: []
+  followerList :[
+    {
+      id:1,
+      nickname:'팔로워1'
+    },
+    {
+      id:2,
+      nickname:"팔로워2"
+    },
+    {
+      id:3,
+      nickname:"팔로워3"
+    },
+  ],
+  followingList: [
+    {
+      id:1,
+      nickname:'팔로잉1'
+    },
+    {
+      id:2,
+      nickname:"팔로잉2"
+    },
+    {
+      id:3,
+      nickname:"팔로잉3"
+    },
+  ]
 });
 
 export const mutations = {
@@ -10,6 +36,14 @@ export const mutations = {
   },
   changeNickname(state, payload) {
     state.me.nickname = payload.nickname;
+  },
+  removeFollower(state, payload) {
+    const index = state.followerList.findIndex( v => v.id === payload.id);
+    state.followerList.splice(index, 1); // 팔로워 삭제
+  },
+  cancleFollowing(state, payload) {
+    const index = state.followingList.findIndex( v => v.id === payload.id);
+    state.followingList.splice(index, 1); // 팔로잉 취소
   }
 };
 
@@ -27,4 +61,11 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
   changeNickname({ commit }, payload) {
     commit('chageNickname', payload);
   },
+  removeFollower({ commit }, payload) {
+    commit('removeFollower', payload);
+  },
+  cancleFollowing({ commit }, payload) {
+    commit('cancleFollowing', payload);
+  },
+
 };

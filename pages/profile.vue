@@ -21,13 +21,13 @@
       <v-card style="margin: 10px 0;">
         <v-container>
           <v-subheader>팔로잉</v-subheader>
-          <follow-list />
+          <follow-list :peoples="following" :remove="cancleFollowing" />
         </v-container>
       </v-card>
       <v-card style="margin: 10px 0;">
         <v-container>
           <v-subheader>팔로워</v-subheader>
-          <follow-list />
+          <follow-list :peoples="follower" :remove="removeFollower" />
         </v-container>
       </v-card>
     </v-container>
@@ -44,16 +44,37 @@ export default {
   data() {
     return {
       valid: false,
-      nicknameRules: v => !!v || "닉네임을 입력해주세요."
+      nickname: '',
+      nicknameRules:[
+        v => !!v || "닉네임을 입력해주세요.",
+      ] 
     }
   },
-  method: {
+  computed: {
+    follower() {
+      return this.$store.state.users.followerList;
+    },
+    following() {
+      return this.$store.state.users.followingList;
+    }
+  },
+  methods: {
     onChangeNickname() {
       this.$store.dispatch('users/changeNickname', {
         nickname: this.nickname,
       });
-    }
-  }
+    },
+    removeFollower(id) {
+      this.$store.dispatch('users/removeFollower', {
+        id,
+      })
+    },
+    cancleFollowing(id) {
+      this.$store.dispatch('users/cancleFollowing', {
+        id,
+      })
+    },
+  },
 }
 </script>
 
