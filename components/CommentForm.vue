@@ -35,7 +35,7 @@ export default {
     }
   },
   methods: {
-    onChangeTestarea(value) {
+    onChangeTextarea(value) {
       if (value.length) {
         this.hideDetails = true;
         this.success = false;
@@ -45,7 +45,12 @@ export default {
     onSubmitForm() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch('posts/addComment', {
-
+          id: Date.now(),
+          postId: this.postId,
+          content: this.content,
+          User: {
+            nickname: this.me.nickname,
+          }
         })
         .then(() => {
           this.content = '';

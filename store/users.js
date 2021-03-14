@@ -59,7 +59,7 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
     context.commit('setMe', payload);
   },
   changeNickname({ commit }, payload) {
-    commit('chageNickname', payload);
+    commit('changeNickname', payload);
   },
   removeFollower({ commit }, payload) {
     commit('removeFollower', payload);
