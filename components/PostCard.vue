@@ -29,9 +29,6 @@
             <v-btn dark color="orange" @click="onEditPost">편집</v-btn>
           </div>
         </v-menu>
-        <v-btn text color="orange">
-          <v-icon>mdi-dots-horizontal</v-icon>
-        </v-btn>
       </v-card-actions>
     </v-card>
     <template v-if="commentOpened">

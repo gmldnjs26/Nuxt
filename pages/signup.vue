@@ -88,11 +88,6 @@ export default {
       }
     }
   },
-  head() {
-    return {
-      title: '회원가입'
-    }
-  }
 }
 </script>
 
