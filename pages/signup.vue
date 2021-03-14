@@ -70,6 +70,20 @@ export default {
       ],
     }
   },
+  computed: {
+    me() {
+      return this.$store.state.users.me;
+    }
+  },
+  watch: {
+    me(value) { // 값의 변경이 있을경우 value에 값이 들어온다.
+      if(value) {
+         this.$router.push({
+           path: '/',
+         });
+      }
+    }
+  },
   methods: {
     onSubmitForm() {
       if (this.$refs.form.validate()) {

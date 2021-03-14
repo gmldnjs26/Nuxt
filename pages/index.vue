@@ -16,10 +16,14 @@ export default {
     PostCard,
     PostForm,
   },
-  head() {
-    return {
-      title: '메인페이지'
-    }
+  fetch({ store }) {
+    store.dispatch('posts/loadPost')
+  },
+  mounted() {
+    window,addEventListener('scroll', this.onScroll);
+  },
+  beforeDestroy() { // created에서 만든건 여기서 제거안해주면 메모리 누수가 생긴다.
+    window.removeEventListener('scroll', this.onScroll);
   },
   computed: {
     me() {
@@ -27,6 +31,18 @@ export default {
     },
     mainPosts() {
       return this.$store.state.posts.mainPosts;
+    },
+    hasMorePost() {
+      return this.$store.state.posts.hasMorePost;
+    }
+  },
+  methods: {
+    onScroll() {
+      if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300 ) {
+        if (this.hasMorePost) {
+          this.$store.dispatch('posts/loadPost');
+        }
+      }
     }
   }
 }
