@@ -1,5 +1,20 @@
 <template>
-  <div>
+  <v-list>
+    <v-col v-for="people in peoples" :key="people.id" cols="12" md="4" style="display: inline-block">
+      <v-list-item>
+        <v-list-item-avatar color="indigo">
+          <span class="white--text headline">{{ people.nickname[0] }}</span>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>{{ people.nickname }}</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-icon @click="remove(people.id)">mdi-minus-circle-outline</v-icon>
+        </v-list-item-action>
+      </v-list-item>
+    </v-col>
+  </v-list>
+  <!-- <div>
     <v-container>
       <v-card v-for="people in peoples" :key="people.id">
         <v-card-text>
@@ -12,7 +27,7 @@
         </v-card-actions>
       </v-card>
     </v-container>
-  </div>
+  </div> -->
 </template>
 <script>
 export default {
@@ -20,12 +35,6 @@ export default {
     peoples: {
       type: Array,
       required: true,
-      // default: () => {
-      //   return {
-      //     id: 999,
-      //     nickname: '팔로워없음',
-      //   }
-      // }
     },
     remove: {
       type: Function,
