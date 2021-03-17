@@ -21,12 +21,14 @@
         <v-container>
           <v-subheader>팔로잉</v-subheader>
           <follow-list :peoples="following" :remove="cancleFollowing" />
+          <v-btn v-if="hasMoreFollowing" dark color="green" style="width: 100%">더보기</v-btn>
         </v-container>
       </v-card>
       <v-card style="margin: 10px 0;">
         <v-container>
           <v-subheader>팔로워</v-subheader>
           <follow-list :peoples="follower" :remove="removeFollower" />
+          <v-btn v-if="hasMoreFollower" dark color="green" style="width: 100%">더보기</v-btn>
         </v-container>
       </v-card>
     </v-container>
@@ -54,6 +56,12 @@ export default {
     },
     following() {
       return this.$store.state.users.followingList;
+    },
+    hasMoreFollowing() {
+      return this.$store.state.users.hasMoreFollowing;
+    },
+    hasMoreFollower() {
+      return this.$store.state.users.hasMoreFollower;
     }
   },
   methods: {

@@ -1,5 +1,7 @@
 export const state = () => ({
   me: null, // me가 null이면 비로그인 있으면 로그인한 상태
+  hasMoreFollower: true,
+  hasMoreFollowing: true,
   followerList :[
     {
       id:1,
@@ -44,7 +46,8 @@ export const mutations = {
   cancleFollowing(state, payload) {
     const index = state.followingList.findIndex( v => v.id === payload.id);
     state.followingList.splice(index, 1); // 팔로잉 취소
-  }
+  },
+
 };
 
 export const actions = { // context -> {commit, dispatch, state, rootState, getters, rootGetters}
@@ -67,5 +70,15 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
   cancleFollowing({ commit }, payload) {
     commit('cancleFollowing', payload);
   },
+  loadFollower({ commit, state }, payload) {
+    if (state.hasMoreFollower) {
+      commit('loadFollowers');
+    }
+  },
+  loadFollowing({ commit, state }, payload) {
+    if (state.hasMoreFollowing) {
+      commit('loadFollowings');
+    }
+  }
 
 };
