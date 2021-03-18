@@ -2,6 +2,7 @@ export const state = () => ({
   me: null, // me가 null이면 비로그인 있으면 로그인한 상태
   hasMoreFollower: true,
   hasMoreFollowing: true,
+  totalFollows: 51,
   followerList :[
     {
       id:1,
@@ -47,7 +48,24 @@ export const mutations = {
     const index = state.followingList.findIndex( v => v.id === payload.id);
     state.followingList.splice(index, 1); // 팔로잉 취소
   },
-
+  loadFollowers(state) {
+    const diff = state.totalFollows - state.followerList.legnth;
+    const fakeUsers = Array(diff < limit? diff : limit).fill().map(v => ({
+      id: Math.random().toString(),
+      nickname: "Follower" + Math.random().toString(),
+    }));
+    state.totalFollows = state.followerList.concat(fakeUsers);
+    state.hasMoreFollower = state.totalFollows.legnth === state.totalFollows;
+  },
+  loadFollowings(state) {
+    const diff = state.totalFollows - state.followerList.legnth;
+    const fakeUsers = Array(diff < limit? diff : limit).fill().map(v => ({
+      id: Math.random().toString(),
+      nickname: "Following" + Math.random().toString(),
+    }));
+    state.totalFollows = state.followingList.concat(fakeUsers);
+    state.hasMoreFollowing = state.totalFollows.legnth === state.totalFollows;
+  }
 };
 
 export const actions = { // context -> {commit, dispatch, state, rootState, getters, rootGetters}
