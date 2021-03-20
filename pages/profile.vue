@@ -21,14 +21,14 @@
         <v-container>
           <v-subheader>팔로잉</v-subheader>
           <follow-list :peoples="following" :remove="cancleFollowing" />
-          <v-btn v-if="hasMoreFollowing" dark color="green" style="width: 100%">더보기</v-btn>
+          <v-btn @click="loadMoreFollowings" v-if="hasMoreFollowing" dark color="green" style="width: 100%">더보기</v-btn>
         </v-container>
       </v-card>
       <v-card style="margin: 10px 0;">
         <v-container>
           <v-subheader>팔로워</v-subheader>
           <follow-list :peoples="follower" :remove="removeFollower" />
-          <v-btn v-if="hasMoreFollower" dark color="green" style="width: 100%">더보기</v-btn>
+          <v-btn @click="loadMoreFollowers" v-if="hasMoreFollower" dark color="green" style="width: 100%">더보기</v-btn>
         </v-container>
       </v-card>
     </v-container>
@@ -49,6 +49,10 @@ export default {
         v => !!v || "닉네임을 입력해주세요.",
       ] 
     }
+  },
+  async fetch({ store }) {
+    await store.dispatch('users/loadFollowers');
+    await store.dispatch('users/loadFollowings');
   },
   computed: {
     follower() {
@@ -80,6 +84,12 @@ export default {
         id,
       })
     },
+    loadMoreFollowers() {
+      this.$store.dispatch('users/loadFollowers')
+    },
+    loadMoreFollowings() {
+      this.$store.dispatch('users/loadFollowings')
+    }
   },
   middleware: 'authenticated', // middleware name
 }

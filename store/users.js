@@ -2,36 +2,13 @@ export const state = () => ({
   me: null, // me가 null이면 비로그인 있으면 로그인한 상태
   hasMoreFollower: true,
   hasMoreFollowing: true,
-  totalFollows: 51,
-  followerList :[
-    {
-      id:1,
-      nickname:'팔로워1'
-    },
-    {
-      id:2,
-      nickname:"팔로워2"
-    },
-    {
-      id:3,
-      nickname:"팔로워3"
-    },
-  ],
-  followingList: [
-    {
-      id:1,
-      nickname:'팔로잉1'
-    },
-    {
-      id:2,
-      nickname:"팔로잉2"
-    },
-    {
-      id:3,
-      nickname:"팔로잉3"
-    },
-  ]
+  followerList :[],
+  followingList: []
 });
+
+const totalFollowers = 8;
+const totalFollowings = 6;
+const limit = 3;
 
 export const mutations = {
   setMe(state, payload) {
@@ -49,22 +26,22 @@ export const mutations = {
     state.followingList.splice(index, 1); // 팔로잉 취소
   },
   loadFollowers(state) {
-    const diff = state.totalFollows - state.followerList.legnth;
-    const fakeUsers = Array(diff < limit? diff : limit).fill().map(v => ({
+    const diff = totalFollowers - state.followerList.length;
+    const fakeUsers = Array(diff < limit ? diff : limit).fill().map(v => ({
       id: Math.random().toString(),
       nickname: "Follower" + Math.random().toString(),
     }));
-    state.totalFollows = state.followerList.concat(fakeUsers);
-    state.hasMoreFollower = state.totalFollows.legnth === state.totalFollows;
+    state.followerList = state.followerList.concat(fakeUsers);
+    state.hasMoreFollower = fakeUsers.length === limit;
   },
   loadFollowings(state) {
-    const diff = state.totalFollows - state.followerList.legnth;
-    const fakeUsers = Array(diff < limit? diff : limit).fill().map(v => ({
+    const diff = totalFollowings - state.followingList.length;
+    const fakeUsers = Array(diff < limit ? diff : limit).fill().map(v => ({
       id: Math.random().toString(),
       nickname: "Following" + Math.random().toString(),
     }));
-    state.totalFollows = state.followingList.concat(fakeUsers);
-    state.hasMoreFollowing = state.totalFollows.legnth === state.totalFollows;
+    state.followingList = state.followingList.concat(fakeUsers);
+    state.hasMoreFollowing = fakeUsers.length === limit;
   }
 };
 
@@ -88,15 +65,14 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
   cancleFollowing({ commit }, payload) {
     commit('cancleFollowing', payload);
   },
-  loadFollower({ commit, state }, payload) {
+  loadFollowers({ commit, state }) {
     if (state.hasMoreFollower) {
       commit('loadFollowers');
     }
   },
-  loadFollowing({ commit, state }, payload) {
+  loadFollowings({ commit, state }) {
     if (state.hasMoreFollowing) {
       commit('loadFollowings');
     }
   }
-
 };
