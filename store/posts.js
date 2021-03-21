@@ -1,6 +1,7 @@
 export const state = () => ({
   mainPosts: [],
   hasMorePost: true,
+  imagePaths: [],
 });
 
 const limit = 10; // 실무에서는 라맛방식으로는 안한다고 한다. 변동이 많기때문
@@ -32,12 +33,29 @@ export const mutations = {
     }));
     state.mainPosts = state.mainPosts.concat(fakePosts);
     state.hasMorePost = fakePosts.length === limit;
+  },
+  concatImagePaths(state, payload) {
+    state.imagePaths = state.imagePaths.concat(payload);
+  },
+  removeImagePath(state, payload) {
+    state.imagePaths.splice(payload, 1);
   }
 }
 
 export const actions = {
   add({commit}, payload) {
-    commit('addMainPost', payload, { root: false}); // 3번째 root인자는 index.js를 참조할지안할지
+    this.$axios.post('http://localhost:3086/post', {
+      content: payload.content,
+      imagePaths: state.imagePaths,
+    }, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      commit('addMainPost', res.data, { root: false}); // 3번째 root인자는 index.js를 참조할지안할지
+    })
+    .catch((e) => {
+      console.log(e);
+    })
   },
   remove({ commit }, payload) {
     commit('removeMainPost', payload);
@@ -49,5 +67,16 @@ export const actions = {
     if (state.hasMorePost) {
       commit('loadPosts');
     }
+  },
+  uploadImages({ commit }, payload) {
+    this.$axios.post('http://localhost:3086/post/images', payload, {
+      withCredentials: true,
+    })
+    .then((res) => {
+       commit('concatImagePaths', res.data);
+    })
+    .catch((e) => {
+      console.log(e);
+    })
   }
 }

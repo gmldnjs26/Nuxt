@@ -88,8 +88,9 @@ export default {
     onSubmitForm() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch('users/signUp', { // dispatch 자체가 Promise
+          email: this.email,
           nickname: this.nickname,
-          email: this.email
+          password: this.password
         })
         .then(() => {
           this.$router.push({ // nuxt도 내부적으로 router를 쓰기때문에 가능

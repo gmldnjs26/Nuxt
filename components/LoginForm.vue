@@ -56,7 +56,7 @@ export default {
       if(this.$refs.form.validate()) {
         this.$store.dispatch('users/logIn', {
           email: this.email,
-          nickname: 'heewon',
+          password: this.password,
         })
       }
     },

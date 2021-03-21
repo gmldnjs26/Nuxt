@@ -1,11 +1,15 @@
 module.exports = {
-    head: {
-        title: 'NodeBird'
-    },
-    buildModules: [
-        '@nuxtjs/vuetify'
-    ],
-    moduels: [
-        '@nuxtjs/axios'
-    ]
-}
+  server: {
+    port: 3000,
+  },
+  head: {
+      title: 'NodeBird',
+  },
+  modules: [
+    '@nuxtjs/axios',
+  ],
+  buildModules: [
+    '@nuxtjs/vuetify',
+  ],
+  vuetify: {},
+};
