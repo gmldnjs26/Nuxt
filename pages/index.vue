@@ -17,7 +17,7 @@ export default {
     PostForm,
   },
   fetch({ store }) {
-    store.dispatch('posts/loadPost')
+    store.dispatch('posts/loadPosts')
   },
   mounted() {
     window,addEventListener('scroll', this.onScroll);

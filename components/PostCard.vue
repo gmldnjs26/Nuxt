@@ -77,7 +77,12 @@ export default {
 
     },
     onToggleComment() {
-      this.commentOpened = !this.commentOpened;
+      if (!this.commentOpened) {
+        this.$store.dispatch('posts/loadComments', {
+          postId: this.post.id,
+        })
+      }
+      this.commentOpened = !this.commentOpened
     }
   }
 }
