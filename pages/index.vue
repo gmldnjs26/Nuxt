@@ -16,8 +16,8 @@ export default {
     PostCard,
     PostForm,
   },
-  fetch({ store }) {
-    store.dispatch('posts/loadPosts')
+  async fetch({ store }) {
+    await store.dispatch('posts/loadPosts')
   },
   mounted() {
     window,addEventListener('scroll', this.onScroll);
