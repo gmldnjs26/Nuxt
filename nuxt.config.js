@@ -12,4 +12,9 @@ module.exports = {
     '@nuxtjs/vuetify',
   ],
   vuetify: {},
+  axios: {
+    browserBaseURL: 'http://localhost:3087',
+    baseURL: 'http://localhost:3087',
+    https: false,
+  }
 };

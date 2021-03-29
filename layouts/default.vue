@@ -39,25 +39,24 @@
 </template>
 
 <script>
-  import LoginForm from '~/components/LoginForm.vue';
-
-  export default {
-    components: {
-      LoginForm,
-    },
-    data() {
-      return {
-        hashtag: '',
-      }
-    },
-    methods: {
-      onSearchHashtag() {
-        this.$router.push({
-          path: `/hashtag/${this.hashtag}`,
-        })
-      }
+import LoginForm from '~/components/LoginForm.vue';
+export default {
+  components: {
+    LoginForm,
+  },
+  data() {
+    return {
+      hashtag: '',
+    }
+  },
+  methods: {
+    onSearchHashtag() {
+      this.$router.push({
+        path: `/hashtag/${this.hashtag}`,
+      })
     }
   }
+}
 </script>
 
 <style scoped>

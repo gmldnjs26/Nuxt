@@ -1,7 +1,11 @@
+import Vue from 'vue';
+import throttle from 'lodash.throttle';
+
 export const state = () => ({
   mainPosts: [],
   hasMorePost: true,
   imagePaths: [],
+  errMsg: '',
 });
 
 const limit = 10; // 실무에서는 라맛방식으로는 안한다고 한다. 변동이 많기때문
@@ -24,19 +28,8 @@ export const mutations = {
     state.mainPosts[index].Comments = payload;
   },
   loadPosts(state, payload) {
-    // const diff = totalPosts - state.mainPosts.length; // 아직 안불러온 게시글 수
-    // const fakePosts = Array(diff > limit ? limit : diff).fill().map(v => ({
-    //   id: Math.random().toString(),
-    //   User: {
-    //     id: 1,
-    //     nickname:'ZeroCho',
-    //   },
-    //   content: `Hello infinite scrolling~ ${Math.random()}`,
-    //   Commments: [],
-    //   Images: [],
-    // }));
     state.mainPosts = state.mainPosts.concat(payload);
-    state.hasMorePost = fakePosts.length === limit;
+    state.hasMorePost = payload.length === limit;
   },
   concatImagePaths(state, payload) {
     state.imagePaths = state.imagePaths.concat(payload);
@@ -48,7 +41,7 @@ export const mutations = {
 
 export const actions = {
   add({commit}, payload) {
-    this.$axios.post('http://localhost:3086/post', {
+    this.$axios.post('/post', {
       content: payload.content,
       imagePaths: state.imagePaths,
     }, {
@@ -62,10 +55,18 @@ export const actions = {
     })
   },
   remove({ commit }, payload) {
-    commit('removeMainPost', payload);
+    this.$axios.delete(`/post/${payload.postId}`, {
+      withCredentials: true
+    })
+    .then(() => {
+      commit('removeMainPost', payload);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   },
   addComment({ commit }, payload) {
-    this.$axios.post(`http://localhost:3086/post/${payload.postId}/comment`, {
+    this.$axios.post(`/post/${payload.postId}/comment`, {
       content: payload.content,
     }, {
       withCredentials: true,
@@ -77,28 +78,37 @@ export const actions = {
       console.log(err);
     })
   },
-  loadComments({commit, state}, payload) {
-    this.$axios.get(`http://localhost:3086/post/${payload.postId}/comments`)
+  loadComments({ commit, state }, payload) {
+    this.$axios.get(`/post/${payload.postId}/comments`)
       .then((res) => {
         commit('loadComments', res.data);
       })
       .catch((err) => {
-        console.log(err);
+        state.errMsg = err;
       })
   },
-  loadPosts({ commit,state}, payload) {
+  loadPosts: throttle(async function({ commit, state }) {
+    console.log("actions loadPosts")
     if (state.hasMorePost) {
-      this.$axios.get(`http://localhost:3086/posts?offset=${state.mainPosts.length}&limit=${limit}`)
-        .then((res) => {
-          commit('loadPosts', res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
+      try {
+        const lastPost = state.mainPosts[state.mainPosts.length - 1];
+        await this.$axios.get(`/posts?lastId=${lastPost ? lastPost.id : 6}&limit=${limit}`)
+          .then((res) => {
+            commit('loadPosts', res.data);
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log("Server Error");
+            state.errMsg = err;
+          })
+      } catch(error) {
+        console.log("Axios Error")
+        state.errMsg = err;
+      }
     }
-  },
+  }, 3000),
   uploadImages({ commit }, payload) {
-    this.$axios.post('http://localhost:3086/post/images', payload, {
+    this.$axios.post('/post/images', payload, {
       withCredentials: true,
     })
     .then((res) => {
