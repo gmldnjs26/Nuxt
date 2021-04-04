@@ -47,7 +47,7 @@ export const mutations = {
 
 export const actions = { // context -> {commit, dispatch, state, rootState, getters, rootGetters}
   loadUser({ commit }) {
-    this.$axios.get('/user/loaduser',{
+    this.$axios.get('/user/',{
       withCredentials: true,
     })
     .then((res) => {

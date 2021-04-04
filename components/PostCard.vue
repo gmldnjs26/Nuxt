@@ -12,11 +12,11 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn text color="orange">
+        <v-btn text color="orange" @click="onRetweet">
           <v-icon>mdi-twitter-retweet</v-icon>
         </v-btn>
-        <v-btn text color="orange">
-          <v-icon>mdi-heart-outline</v-icon>
+        <v-btn text color="orange" @click="onClickHeart">
+          <v-icon>{{ heartIcon }}</v-icon>
         </v-btn>
         <v-btn text color="orange" @click="onToggleComment">
           <v-icon>mdi-comment-outline</v-icon>
@@ -69,6 +69,20 @@ export default {
       commentOpened: false,
     }
   },
+  computed: {
+    liked() {
+      const me = this.$store.state.users.me;
+      return (this.post.Likers || []).find(v => v.id === (me && me.id));
+    },
+    heartIcon() {
+      const me = this.$store.state.users.me;
+      const liked = (this.post.Likers || []).find(v => v.id === (me && me.id));
+      return liked ? 'mdi-heart' : 'mdi-heart-outline';
+    },
+    me() {
+      return this.$store.state.users.me;
+    }
+  },
   methods: {
     onRemovePost() {
       this.$store.dispatch('posts/remove', {
@@ -85,6 +99,27 @@ export default {
         });
       }
       this.commentOpened = !this.commentOpened
+    },
+    onRetweet() {
+      if (!this.me) {
+        return alert('로그인이 필요합니다.');
+      }
+      this.$store.dispatch('posts/retweet', {
+        postId: this.post.id,
+      });
+    },
+    onClickHeart() {
+      if (!this.me) {
+        return alert('로그인이 필요합니다.');
+      }
+      if(this.liked) {
+        return this.$store.dispatch('posts/unlikePost', {
+          postId: this.post.id,
+        });
+      }
+      return this.$store.dispatch('posts/likePost', {
+        postId: this.post.id,
+      })
     }
   }
 }
