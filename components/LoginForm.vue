@@ -18,7 +18,7 @@
 						required 
 					/>
 					<v-btn color="green" type="submit" :disabled="!valid">로그인</v-btn>
-					<v-btn nuxt-to="/signup">회원가입</v-btn>
+					<v-btn nuxt-link to="/signup">회원가입</v-btn>
 				</v-container>
       </v-form>
     </v-card>
