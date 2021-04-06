@@ -14,12 +14,12 @@
           :rules="[v => !!v.trim() || '내용을 입력하세요.']"
           @input="onChangeTextarea"
         />
-        <v-btn type="submit" color="green" fixed right style="margin-right : 10px">짹짹</v-btn>
         <input ref="imageInput" type="file" multiple hidden @change="onChangeImages">
         <v-btn type="button" @click="onClickImageUpload">이미지 업로드</v-btn>
+        <v-btn type="submit" color="green" absolute right style="margin-right : 10px">짹짹</v-btn>
         <div>
             <div v-for="(p,i) in imagePaths" :key="p" style="display: inline-block">
-              <img :src="`http://localhost:3086/${p}`" alt="p" style="width: 200px">
+              <img :src="`http://localhost:3087/${p}`" alt="p" style="width: 200px">
               <div>
                 <button @click="onRemoveImage(i)" type="button">제거</button>
               </div>
@@ -72,8 +72,6 @@ export default {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
-      console.log("ChangeEvent");
-      console.log(e.target.files);
       const imageFormData = new FormData();
       [].forEach.call(e.target.files, (f) => {
         imageFormData.append('image', f);
