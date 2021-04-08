@@ -18,16 +18,21 @@ export const mutations = {
     state.me.nickname = payload.nickname;
   },
   removeFollower(state, payload) {
-    const index = state.followerList.findIndex( v => v.id === payload.id);
+    let index = state.followerList.findIndex( v => v.id === payload.userId);
     state.followerList.splice(index, 1); // 팔로워 삭제
+    index = state.me.followers.findIndex( v => v.id === payload.userId);
+    state.me.followerList.splice(index, 1); // 팔로워 삭제
   },
   cancleFollowing(state, payload) {
-    const index = state.followingList.findIndex( v => v.id === payload.id);
+    let index = state.followingList.findIndex( v => v.id === payload.userId);
+    state.followingList.splice(index, 1); // 팔로잉 취소
+    index = state.me.followings.findIndex( v => v.id === payload.userId);
     state.me.Followings.splice(index, 1); // 팔로잉 취소
   },
   loadFollowers(state, payload) {
+    console.log(payload)
     if (payload.offset === 0) {
-      state.followingList = payload.data;
+      state.followerList = payload.data;
     } else {
       state.followerList = state.followerList.concat(payload.data);
     }
@@ -35,6 +40,7 @@ export const mutations = {
   },
   loadFollowings(state, payload) {
     if (payload.offset === 0) {
+      console.log("초기화");
       state.followingList = payload.data;
     } else {
       state.followingList = state.followingList.concat(payload.data);
@@ -106,17 +112,22 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
     })
   },
   removeFollower({ commit }, payload) {
-    commit('removeFollower', payload);
-  },
-  cancleFollowing({ commit }, payload) {
-    commit('cancleFollowing', payload);
+    return this.$axios.delete(`/user/${payload.userId}/follower`, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      commit('removeFollower', {
+        userId: payload.userId,
+      })
+    })
+    .catch(err => {
+      console.error(err);
+    });
   },
   loadFollowers({ commit, state }, payload) {
-    let offset;
+    let offset = state.followerList.length;
     if (payload && payload.offset === 0) {
-      offset = payload.offset;
-    } else {
-      offset = state.followerList.length;
+      offset = 0;
     }
     if (state.hasMoreFollower) {
       return this.$axios.get(`/user/${state.me.id}/followers?limit=3&offset=${offset}`,{
@@ -134,11 +145,10 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
     }
   },
   loadFollowings({ commit, state }, payload) {
-    let offset;
-    if (payload && payload.offset) {
-      offset = payload.offset;
-    } else {
-      offset = state.followingList.length;
+    let offset = state.followingList.length;
+    if (payload && payload.offset === 0) {
+      state.hasMoreFollowing = true;
+      offset = 0;
     }
     if (state.hasMoreFollowing) {
       return this.$axios.get(`/user/${state.me.id}/followings?limit=3&offset=${offset}`, {

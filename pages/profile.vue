@@ -75,14 +75,14 @@ export default {
         nickname: this.nickname,
       });
     },
-    removeFollower(id) {
+    removeFollower(userId) {
       this.$store.dispatch('users/removeFollower', {
-        id,
+        userId,
       })
     },
-    cancleFollowing(id) {
-      this.$store.dispatch('users/cancleFollowing', {
-        id,
+    cancleFollowing(userId) {
+      this.$store.dispatch('users/unfollow', {
+        userId,
       })
     },
     loadMoreFollowers() {

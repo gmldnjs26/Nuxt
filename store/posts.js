@@ -98,26 +98,20 @@ export const actions = {
         state.errMsg = err;
       })
   },
-  loadPosts: throttle(async function({ commit, state }) {
+  loadPosts:throttle(async function({ commit, state }) {
     console.log("actions loadPosts")
     if (state.hasMorePost) {
       try {
         const lastPost = state.mainPosts[state.mainPosts.length - 1];
-        await this.$axios.get(`/posts?lastId=${lastPost ? lastPost.id : 6}&limit=${limit}`)
-          .then((res) => {
-            commit('loadPosts', res.data);
-            console.log(res.data);
-          })
-          .catch((err) => {
-            console.log("Server Error");
-            state.errMsg = err;
-          })
+        console.log("lastPost.id"+lastPost.id)
+        await this.$axios.get(`/posts?lastId=${lastPost && lastPost.id}&limit=${limit}`)
+        commit('loadPosts', res.data);
+        return;
       } catch(error) {
         console.log("Axios Error")
-        state.errMsg = err;
       }
     }
-  }, 3000),
+  }, 300),
   uploadImages({ commit }, payload) {
     this.$axios.post('/post/images', payload, {
       withCredentials: true,
