@@ -118,7 +118,7 @@ export const actions = {
         console.log("Axios Error")
       }
     }
-  }, 3000),
+  }, 300),
   uploadImages({ commit }, payload) {
     this.$axios.post('/post/images', payload, {
       withCredentials: true,

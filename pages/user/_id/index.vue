@@ -17,7 +17,7 @@ export default {
     PostForm,
   },
   fetch({ store }) {
-    store.dispatch('posts/loadPost')
+    store.dispatch('posts/loadPosts')
   },
   mounted() {
     window,addEventListener('scroll', this.onScroll);
@@ -40,7 +40,7 @@ export default {
     onScroll() {
       if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300 ) {
         if (this.hasMorePost) {
-          this.$store.dispatch('posts/loadPost');
+          this.$store.dispatch('posts/loadPosts');
         }
       }
     }

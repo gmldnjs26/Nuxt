@@ -30,6 +30,7 @@ export const mutations = {
     state.me.Followings.splice(index, 1); // 팔로잉 취소
   },
   loadFollowers(state, payload) {
+    console.log(payload)
     if (payload.offset === 0) {
       state.followerList = payload.data;
     } else {
@@ -39,6 +40,7 @@ export const mutations = {
   },
   loadFollowings(state, payload) {
     if (payload.offset === 0) {
+      console.log("초기화");
       state.followingList = payload.data;
     } else {
       state.followingList = state.followingList.concat(payload.data);
@@ -109,12 +111,23 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
       console.error(err);
     })
   },
+  removeFollower({ commit }, payload) {
+    return this.$axios.delete(`/user/${payload.userId}/follower`, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      commit('removeFollower', {
+        userId: payload.userId,
+      })
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  },
   loadFollowers({ commit, state }, payload) {
-    let offset;
+    let offset = state.followerList.length;
     if (payload && payload.offset === 0) {
-      offset = payload.offset;
-    } else {
-      offset = state.followerList.length;
+      offset = 0;
     }
     if (state.hasMoreFollower) {
       return this.$axios.get(`/user/${state.me.id}/followers?limit=3&offset=${offset}`,{
@@ -132,11 +145,10 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
     }
   },
   loadFollowings({ commit, state }, payload) {
-    let offset;
-    if (payload && payload.offset) {
-      offset = payload.offset;
-    } else {
-      offset = state.followingList.length;
+    let offset = state.followingList.length;
+    if (payload && payload.offset === 0) {
+      state.hasMoreFollowing = true;
+      offset = 0;
     }
     if (state.hasMoreFollowing) {
       return this.$axios.get(`/user/${state.me.id}/followings?limit=3&offset=${offset}`, {

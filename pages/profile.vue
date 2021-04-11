@@ -80,8 +80,7 @@ export default {
       })
     },
     cancleFollowing(userId) {
-      console.log("userId" + userId);
-      this.$store.dispatch('users/unFollow', {
+      this.$store.dispatch('users/unfollow', {
         userId,
       })
     },
