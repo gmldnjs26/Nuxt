@@ -2,8 +2,8 @@ export const state = () => ({
   me: null, // me가 null이면 비로그인 있으면 로그인한 상태
   hasMoreFollower: true,
   hasMoreFollowing: true,
-  followerList :[],
-  followingList: []
+  followerList: [],
+  followingList: [],
 });
 
 const totalFollowers = 8;
@@ -20,13 +20,13 @@ export const mutations = {
   removeFollower(state, payload) {
     let index = state.followerList.findIndex( v => v.id === payload.userId);
     state.followerList.splice(index, 1); // 팔로워 삭제
-    index = state.me.followers.findIndex( v => v.id === payload.userId);
+    index = state.me.Followers.findIndex( v => v.id === payload.userId);
     state.me.followerList.splice(index, 1); // 팔로워 삭제
   },
   cancleFollowing(state, payload) {
     let index = state.followingList.findIndex( v => v.id === payload.userId);
     state.followingList.splice(index, 1); // 팔로잉 취소
-    index = state.me.followings.findIndex( v => v.id === payload.userId);
+    index = state.me.Followings.findIndex( v => v.id === payload.userId);
     state.me.Followings.splice(index, 1); // 팔로잉 취소
   },
   loadFollowers(state, payload) {
@@ -179,11 +179,26 @@ export const actions = { // context -> {commit, dispatch, state, rootState, gett
     })
   },
   unFollow({ commit }, payload) {
-    this.$axios.delete(`/user/${payload.userId}/follow`, {
+    this.$axios.delete(`/user/${payload.userId}/following`, {
       withCredentials: true,
     })
     .then((res) => {
+      console.log(res)
       commit('cancleFollowing', {
+        userId: res.data,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+  },
+
+  removeFollower({ commit }, payload) {
+    this.$axios.delete(`/user/${payload.userId}/follower`, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      commit('removeFollower', {
         userId: res.data,
       });
     })

@@ -50,10 +50,9 @@ export default {
       ] 
     }
   },
-  async fetch({ store }) {
-    console.log("fetch Executing")
-    await store.dispatch('users/loadFollowers', { offset: 0 });
-    await store.dispatch('users/loadFollowings', { offset: 0 });
+  fetch({ store }) {
+    store.dispatch('users/loadFollowers', { offset: 0 });
+    return store.dispatch('users/loadFollowings', { offset: 0 });
   },
   computed: {
     follower() {

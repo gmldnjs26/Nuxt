@@ -17,6 +17,9 @@
 </template>
 <script>
 export default {
+  mounted() {
+    console.log(this.peoples)
+  },
   props: {
     peoples: {
       type: Array,

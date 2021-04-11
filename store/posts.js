@@ -28,8 +28,12 @@ export const mutations = {
     state.mainPosts[index].Comments = payload;
   },
   loadPosts(state, payload) {
-    state.mainPosts = state.mainPosts.concat(payload);
-    state.hasMorePost = payload.length === limit;
+    if (payload.offset !== 0) {
+      state.mainPosts = state.mainPosts.concat(payload.posts);
+    } else {
+      state.mainPosts = payload.posts;
+    }
+    state.hasMorePost = payload.posts.length === limit;
   },
   concatImagePaths(state, payload) {
     state.imagePaths = state.imagePaths.concat(payload);
@@ -98,15 +102,18 @@ export const actions = {
         state.errMsg = err;
       })
   },
-  loadPosts:throttle(async function({ commit, state }) {
-    console.log("actions loadPosts")
+  loadPosts: throttle(async function({ commit, state }, payload) {
     if (state.hasMorePost) {
       try {
-        const lastPost = state.mainPosts[state.mainPosts.length - 1];
-        console.log("lastPost.id"+lastPost.id)
-        await this.$axios.get(`/posts?lastId=${lastPost && lastPost.id}&limit=${limit}`)
-        commit('loadPosts', res.data);
-        return;
+        let lastPost = state.mainPosts[state.mainPosts.length - 1];
+        if (payload && payload.offset === 0) {
+          lastPost = null;
+        }
+        const res = await this.$axios.get(`/posts?lastId=${lastPost && lastPost.id}&limit=${limit}`);
+        commit('loadPosts', {
+          posts: res.data,
+          offset: payload ? payload.offset : 999,
+        });
       } catch(error) {
         console.log("Axios Error")
       }
@@ -154,7 +161,6 @@ export const actions = {
       withCredentials: true,
     })
     .then((res) => {
-      console.log('unlikePost');
       commit('unlikePost', {
         userId: res.data.userId,
         postId: payload.postId,
