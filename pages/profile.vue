@@ -50,10 +50,9 @@ export default {
       ] 
     }
   },
-  async fetch({ store }) {
-    console.log("fetch Executing")
-    await store.dispatch('users/loadFollowers', { offset: 0 });
-    await store.dispatch('users/loadFollowings', { offset: 0 });
+  fetch({ store }) {
+    store.dispatch('users/loadFollowers', { offset: 0 });
+    return store.dispatch('users/loadFollowings', { offset: 0 });
   },
   computed: {
     follower() {
@@ -75,14 +74,15 @@ export default {
         nickname: this.nickname,
       });
     },
-    removeFollower(id) {
+    removeFollower(userId) {
       this.$store.dispatch('users/removeFollower', {
-        id,
+        userId,
       })
     },
-    cancleFollowing(id) {
-      this.$store.dispatch('users/cancleFollowing', {
-        id,
+    cancleFollowing(userId) {
+      console.log("userId" + userId);
+      this.$store.dispatch('users/unFollow', {
+        userId,
       })
     },
     loadMoreFollowers() {

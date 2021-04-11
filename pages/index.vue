@@ -35,7 +35,7 @@ export default {
     }
   },
   async fetch({ store }) {
-    await store.dispatch('posts/loadPosts')
+    await store.dispatch('posts/loadPosts', {'offset': 0})
   },
   asyncData() {
     return {};
@@ -69,7 +69,7 @@ export default {
     onScroll() {
       if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300 ) {
         if (this.hasMorePost) {
-          this.$store.dispatch('posts/loadPost');
+          this.$store.dispatch('posts/loadPosts');
         }
       }
     }
