@@ -1,53 +1,65 @@
 <template>
   <v-container>
-    <post-form v-if="me" />
+    <v-card style="margin-bottom: 20px">
+      <v-container>
+        {{other.nickname}}
+      </v-container>
+      <v-row>
+        <v-col cols="4">팔로잉: {{ other.Followings.length }}</v-col>
+        <v-col cols="4">팔로워: {{ other.Followers.length }}</v-col>
+        <v-col cols="4">게시글 수: {{ other.Posts.length }}</v-col>
+      </v-row>
+    </v-card>
     <div>
       <post-card v-for="p in mainPosts" :key="p.id" :post="p"/>
     </div>
+    <!-- <error-modal v-if="errFlg" @close="errFlg=false">
+      <h3 slot="header">
+        Error!
+      </h3>
+      <div slot="body">
+        <h3>
+          게시물이 존재하지않습니다.
+        </h3>
+        <v-btn style="color: green; float:right; margin: 0px 3px;" @click="errFlg = false">확인</v-btn>
+      </div>
+    </error-modal> -->
   </v-container>
 </template>
 
 <script>
 import PostCard from '~/components/PostCard';
-import PostForm from '~/components/PostForm';
 
 export default {
   components: {
     PostCard,
-    PostForm,
   },
-  fetch({ store }) {
-    store.dispatch('posts/loadPosts')
+  data() {
+    return {
+      errFlg: false,
+    }
   },
-  mounted() {
-    window,addEventListener('scroll', this.onScroll);
-  },
-  beforeDestroy() { // created에서 만든건 여기서 제거안해주면 메모리 누수가 생긴다.
-    window.removeEventListener('scroll', this.onScroll);
+  fetch({ store, params }) {
+    store.dispatch('users/loadOther', {
+      userId: params.id,
+    });
+    return store.dispatch('posts/loadOtherPosts', {
+      userId: params.id,
+    });
   },
   computed: {
-    me() {
-      return this.$store.state.users.me;
+    other() {
+      return this.$store.state.users.other;
     },
     mainPosts() {
       return this.$store.state.posts.mainPosts;
     },
-    hasMorePost() {
-      return this.$store.state.posts.hasMorePost;
-    }
   },
-  methods: {
-    onScroll() {
-      if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300 ) {
-        if (this.hasMorePost) {
-          this.$store.dispatch('posts/loadPosts');
-        }
-      }
-    }
-  }
 }
 </script>
 
 <style>
-
+.closeModalBtn {
+  color: #42b983;
+}
 </style>

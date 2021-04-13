@@ -9,7 +9,6 @@ export const state = () => ({
 });
 
 const limit = 10; // 실무에서는 라맛방식으로는 안한다고 한다. 변동이 많기때문
-const totalPosts = 51; 
 
 export const mutations = {
   addMainPost(state, payload) {
@@ -118,7 +117,24 @@ export const actions = {
         console.log("Axios Error")
       }
     }
-  }, 300),
+  }, 3000),
+  loadOtherPosts: throttle(async function({ commit, state }, payload) {
+    if (state.hasMorePost) {
+      try {
+        let lastPost = state.mainPosts[state.mainPosts.length - 1];
+        if (payload && payload.offset === 0) {
+          lastPost = null;
+        }
+        const res = await this.$axios.get(`/user/${payload.userId}/posts?lastId=${lastPost && lastPost.id}&limit=${limit}`);
+        commit('loadPosts', {
+          posts: res.data,
+          offset: payload ? payload.offset : 999,
+        });
+      } catch(error) {
+        console.log("Axios Error")
+      }
+    }
+  }, 3000),
   uploadImages({ commit }, payload) {
     this.$axios.post('/post/images', payload, {
       withCredentials: true,
