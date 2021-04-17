@@ -10,8 +10,17 @@
     </v-card-title>
     <v-card-text>
       <div>
-        <h3>{{ post.User.nickname }}</h3>
-        <div>{{ post.content }}</div>
+        <template v-for="(node, i) in nodes">
+          <nuxt-link 
+            v-if="node.startsWith('#')" 
+            :key="i" 
+            :to="`/hashtag/${(node.slice(1))}`" 
+            style="color: blue;"
+          >
+          {{ node }}
+          </nuxt-link>
+          <template v-else>{{ node }}</template>
+        </template>
       </div>
     </v-card-text>
   </div>
@@ -30,6 +39,9 @@
       }
     },
     computed: {
+      nodes() {
+        return this.post.content.split(/(#[^\s#]+)/);
+      },
       me() {
         return this.$store.state.users.me;
       },

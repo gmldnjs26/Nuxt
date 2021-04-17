@@ -17,8 +17,7 @@ export default {
     post() {
       return this.$store.state.posts.mainPosts.find(v => v.id === parseInt(this.$route.params.id, 10));
     }
-  }
-
+  }, 
 }
 </script>
 

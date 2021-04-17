@@ -72,7 +72,7 @@ export default {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
-      const imageFormData = new FormData();
+      let imageFormData = new FormData();
       [].forEach.call(e.target.files, (f) => {
         imageFormData.append('image', f);
       });

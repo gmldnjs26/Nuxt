@@ -34,12 +34,12 @@ export default {
       errFlg: false,
     }
   },
-  async fetch({ store }) {
-    await store.dispatch('posts/loadPosts', {'offset': 0})
+  fetch({ store }) {
+    return store.dispatch('posts/loadPosts', {'offset': 0})
   },
-  asyncData() {
-    return {};
-  },
+  // asyncData() {
+  //   return {};
+  // },
   mounted() {
     window,addEventListener('scroll', this.onScroll);
   },

@@ -1,21 +1,23 @@
 <template>
-  <div v-if="images.length === 0"></div>
+  <div v-if="images.length === 0">
+    이미지가 없습니다.
+  </div>
   <div v-else-if="images.length === 1">
     <v-img
-      :src="`http://locahost:3087/${images[0].src}`"
+      :src="`http://localhost:3087/${(images[0].src)}`"
       contain
       aspect-ratio="2"
     />
   </div>
   <div v-else-if="images.length === 2" style="display: flex;">
     <v-img
-      :src="`http://locahost:3087/${images[0].src}`"
+      :src="`http://localhost:3087/${images[0].src}`"
       contain
       aspect-ratio="2"
       style="flex: 1"
     />
     <v-img
-      :src="`http://locahost:3087/${images[1].src}`"
+      :src="`http://localhost:3087/${images[1].src}`"
       contain
       aspect-ratio="2"
       style="flex: 1"
@@ -23,7 +25,7 @@
   </div>
   <div v-else>
     <v-img
-      :src="`http://locahost:3087/${images[0].src}`"
+      :src="`http://localhost:3087/${images[0].src}`"
       contain
       aspect-ratio="2"
       style="flex: 1"
@@ -41,7 +43,7 @@ export default {
       type: Array,
       required: true
     }
-  }
+  },
 }
 </script>
 

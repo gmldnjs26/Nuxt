@@ -14,7 +14,8 @@
               <v-text-field
                 v-model="hashtag" 
                 label="검색"
-                hide-details 
+                hide-details
+                prepend-icon="mdi-magnify" 
                 style="margin-top: 10px;"/>
             </div>
           </v-form>
@@ -52,8 +53,9 @@ export default {
   methods: {
     onSearchHashtag() {
       this.$router.push({
-        path: `/hashtag/${this.hashtag}`,
-      })
+        path: `/hashtag/${encodeURIComponent(this.hashtag)}`,
+      });
+      this.hashtag = '';
     }
   }
 }

@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import throttle from 'lodash.throttle';
 
 export const state = () => ({
@@ -15,15 +14,15 @@ export const mutations = {
     state.mainPosts.unshift(payload); // 제일 앞으로
   },
   removeMainPost(state, payload) {
-    const index = state.mainPosts.findIndex( v => v.id === payload.id);
+    const index = state.mainPosts.findIndex( v => v.id == payload.postId);
     state.mainPosts.splice(index, 1); // 삭제
   },
   addComment(state, payload) {
-    const index = state.mainPosts.findIndex( v => v.id === payload.postId);
+    const index = state.mainPosts.findIndex( v => v.id == payload.postId);
     state.mainPosts[index].Comments.unshift(payload);
   },
   loadComments(state, payload) {
-    const index = state.mainPosts.findIndex(v => v.id === payload.postId);
+    const index = state.mainPosts.findIndex(v => v.id == payload.postId);
     state.mainPosts[index].Comments = payload;
   },
   loadPosts(state, payload) {
@@ -32,7 +31,7 @@ export const mutations = {
     } else {
       state.mainPosts = payload.posts;
     }
-    state.hasMorePost = payload.posts.length === limit;
+    state.hasMorePost = payload.posts.length == limit;
   },
   concatImagePaths(state, payload) {
     state.imagePaths = state.imagePaths.concat(payload);
@@ -41,12 +40,12 @@ export const mutations = {
     state.imagePaths.splice(payload, 1);
   },
   unlikePost(state, payload) {
-    const index = state.mainPosts.findIndex(v => v.id === payload.postId);
-    const userIndex = state.mainPosts[index].Likers.findIndex(v => v.id === payload.userId);
+    const index = state.mainPosts.findIndex(v => v.id == payload.postId);
+    const userIndex = state.mainPosts[index].Likers.findIndex(v => v.id == payload.userId);
     state.mainPosts[index].Likers.splice(userIndex, 1);
   },
   likePost(state, payload) {
-    const index = state.mainPosts.findIndex(v => v.id === payload.postId);
+    const index = state.mainPosts.findIndex(v => v.id == payload.postId);
     state.mainPosts[index].Likers.push({
       id: payload.userId,
     });
@@ -54,10 +53,11 @@ export const mutations = {
 }
 
 export const actions = {
-  add({commit}, payload) {
+  add({ commit, state}, payload) {
+    console.log(state.imagePaths)
     this.$axios.post('/post', {
       content: payload.content,
-      imagePaths: state.imagePaths,
+      image: state.imagePaths,
     }, {
       withCredentials: true,
     })
@@ -72,8 +72,9 @@ export const actions = {
     this.$axios.delete(`/post/${payload.postId}`, {
       withCredentials: true
     })
-    .then(() => {
-      commit('removeMainPost', payload);
+    .then((res) => {
+      console.log(res);
+      commit('removeMainPost', res.data);
     })
     .catch((err) => {
       console.log(err);
@@ -105,7 +106,7 @@ export const actions = {
     if (state.hasMorePost) {
       try {
         let lastPost = state.mainPosts[state.mainPosts.length - 1];
-        if (payload && payload.offset === 0) {
+        if (payload && payload.offset == 0) {
           lastPost = null;
         }
         const res = await this.$axios.get(`/posts?lastId=${lastPost && lastPost.id}&limit=${limit}`);
@@ -122,10 +123,28 @@ export const actions = {
     if (state.hasMorePost) {
       try {
         let lastPost = state.mainPosts[state.mainPosts.length - 1];
-        if (payload && payload.offset === 0) {
+        if (payload && payload.offset == 0) {
           lastPost = null;
         }
         const res = await this.$axios.get(`/user/${payload.userId}/posts?lastId=${lastPost && lastPost.id}&limit=${limit}`);
+        commit('loadPosts', {
+          posts: res.data,
+          offset: payload ? payload.offset : 999,
+        });
+      } catch(error) {
+        console.log("Axios Error")
+      }
+    }
+  }, 3000),
+  loadHashtagPosts: throttle(async function({ commit, state }, payload) {
+    if (payload || state.hasMorePost) {
+      try {
+        let lastPost = state.mainPosts[state.mainPosts.length - 1];
+        if (payload && payload.offset == 0) {
+          lastPost = null;
+        }
+        const res = await this.$axios.get(`/hashtag/${payload.hashtag}?lastId=${lastPost && lastPost.id}&limit=${limit}`);
+        console.log(res)
         commit('loadPosts', {
           posts: res.data,
           offset: payload ? payload.offset : 999,

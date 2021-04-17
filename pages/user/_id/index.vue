@@ -1,14 +1,16 @@
 <template>
   <v-container>
-    <v-card style="margin-bottom: 20px">
+    <v-card style="margin: 10px 10px;">
       <v-container>
         {{other.nickname}}
       </v-container>
-      <v-row>
-        <v-col cols="4">팔로잉: {{ other.Followings.length }}</v-col>
-        <v-col cols="4">팔로워: {{ other.Followers.length }}</v-col>
-        <v-col cols="4">게시글 수: {{ other.Posts.length }}</v-col>
-      </v-row>
+      <v-container>
+        <v-row>
+          <v-col cols="4">팔로잉: {{ other.Followings.length }}</v-col>
+          <v-col cols="4">팔로워: {{ other.Followers.length }}</v-col>
+          <v-col cols="4">게시글 수: {{ other.Posts.length }}</v-col>
+        </v-row>
+      </v-container>
     </v-card>
     <div>
       <post-card v-for="p in mainPosts" :key="p.id" :post="p"/>
