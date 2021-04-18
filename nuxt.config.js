@@ -10,7 +10,14 @@ module.exports = {
   ],
   buildModules: [
     '@nuxtjs/vuetify',
+    '@nuxtjs/moment',
   ],
+  moment: {
+    locales: ['ko'],
+  },
+  build: {
+    analyze: true,
+  },
   vuetify: {},
   axios: {
     browserBaseURL: 'http://localhost:3087',

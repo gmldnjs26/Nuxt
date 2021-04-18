@@ -25,6 +25,9 @@ export const mutations = {
     const index = state.mainPosts.findIndex(v => v.id == payload.postId);
     state.mainPosts[index].Comments = payload;
   },
+  loadPost(state, payload) {
+    state.mainPosts  = [payload];
+  },
   loadPosts(state, payload) {
     if (payload.offset !== 0) {
       state.mainPosts = state.mainPosts.concat(payload.posts);
@@ -101,6 +104,14 @@ export const actions = {
       .catch((err) => {
         state.errMsg = err;
       })
+  },
+  async loadPost({ commit, state }, payload) {
+    try {
+      const res = await this.$axios.get(`/post?postId=${payload}`);
+      commit('loadPost',res.data);
+    } catch(error) {
+      console.log("Axios Error")
+    }
   },
   loadPosts: throttle(async function({ commit, state }, payload) {
     if (state.hasMorePost) {
